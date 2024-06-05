@@ -1,30 +1,110 @@
-body{
-	width: 600px;
-	margin: 0 auto;
-	border: 5px solid #02499B;
-	margin-top: 5%;
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
 }
-.users{
-	float : right;
-	margin-right: 30%;
+
+h2, h3 {
+    margin: 10px 0;
+    color: #333;
+    text-align: center;
 }
+
+input, button {
+    display: block;
+    margin: 10px auto;
+    padding: 10px;
+    font-size: 14px;
+}
+
+/* Container */
+.center {
+    width: 90%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Users list */
+.users {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.users h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.users ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.users li {
+    padding: 5px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+/* Messages */
 .messages {
-	width: 500px;
-	height: 400px;
-	margin: auto;
-	border : 1px solid black;
-	padding: 1em;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
 }
-.message_form,
-.change_name_form{
-	padding: 1em;
+
+.message {
+    padding: 5px 0;
 }
-.center{
-	width: 600px;
-	height: 700px;
+
+.message strong {
+    color: #333;
 }
-.textinput{
-	margin-left: 3%;
-	width: 520px;
-	height: 40px;
+
+.message span {
+    color: #555;
+}
+
+/* Forms */
+.message_form, .change_name_form, .login_form, .register_form {
+    margin-bottom: 20px;
+}
+
+.message_form form, .change_name_form form, .login_form form, .register_form form {
+    display: flex;
+    flex-direction: column;
+}
+
+.message_form input, .change_name_form input, .login_form input, .register_form input {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.message_form button, .change_name_form button, .login_form button, .register_form button {
+    padding: 10px;
+    border: none;
+    background-color: #5cb85c;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.message_form button:hover, .change_name_form button:hover, .login_form button:hover, .register_form button:hover {
+    background-color: #4cae4c;
+}
+
+/* Error message */
+.error {
+    color: red;
+    text-align: center;
 }

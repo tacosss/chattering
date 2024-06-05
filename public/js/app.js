@@ -4,239 +4,413 @@
 var React = require('react');
 
 var socket = io.connect();
+var axios = require('axios');
 
 var UsersList = React.createClass({
-	displayName: 'UsersList',
+  displayName: 'UsersList',
 
-	render: function render() {
-		return React.createElement(
-			'div',
-			{ className: 'users' },
-			React.createElement(
-				'h3',
-				null,
-				' 참여자들 '
-			),
-			React.createElement(
-				'ul',
-				null,
-				this.props.users.map(function (user, i) {
-					return React.createElement(
-						'li',
-						{ key: i },
-						user
-					);
-				})
-			)
-		);
-	}
+  render: function render() {
+      return React.createElement(
+          'div',
+          { className: 'users' },
+          React.createElement(
+              'h3',
+              null,
+              ' 참여자들 '
+          ),
+          React.createElement(
+              'ul',
+              null,
+              this.props.users.map(function (user, i) {
+                  return React.createElement(
+                      'li',
+                      { key: i },
+                      user
+                  );
+              })
+          )
+      );
+  }
 });
 
 var Message = React.createClass({
-	displayName: 'Message',
+  displayName: 'Message',
 
-	render: function render() {
-		return React.createElement(
-			'div',
-			{ className: 'message' },
-			React.createElement(
-				'strong',
-				null,
-				this.props.user,
-				' :'
-			),
-			React.createElement(
-				'span',
-				null,
-				this.props.text
-			)
-		);
-	}
+  render: function render() {
+      return React.createElement(
+          'div',
+          { className: 'message' },
+          React.createElement(
+              'strong',
+              null,
+              this.props.user,
+              ' :'
+          ),
+          React.createElement(
+              'span',
+              null,
+              this.props.text
+          )
+      );
+  }
 });
 
 var MessageList = React.createClass({
-	displayName: 'MessageList',
+  displayName: 'MessageList',
 
-	render: function render() {
-		return React.createElement(
-			'div',
-			{ className: 'messages' },
-			React.createElement(
-				'h2',
-				null,
-				' 채팅방 '
-			),
-			this.props.messages.map(function (message, i) {
-				return React.createElement(Message, {
-					key: i,
-					user: message.user,
-					text: message.text
-				});
-			})
-		);
-	}
+  render: function render() {
+      return React.createElement(
+          'div',
+          { className: 'messages' },
+          React.createElement(
+              'h2',
+              null,
+              ' 채팅방 '
+          ),
+          this.props.messages.map(function (message, i) {
+              return React.createElement(Message, {
+                  key: i,
+                  user: message.user,
+                  text: message.text
+              });
+          })
+      );
+  }
 });
 
 var MessageForm = React.createClass({
-	displayName: 'MessageForm',
+  displayName: 'MessageForm',
 
-	getInitialState: function getInitialState() {
-		return { text: '' };
-	},
+  getInitialState: function getInitialState() {
+      return { text: '' };
+  },
 
-	handleSubmit: function handleSubmit(e) {
-		e.preventDefault();
-		var message = {
-			user: this.props.user,
-			text: this.state.text
-		};
-		this.props.onMessageSubmit(message);
-		this.setState({ text: '' });
-	},
+  handleSubmit: function handleSubmit(e) {
+      e.preventDefault();
+      var message = {
+          user: this.props.user,
+          text: this.state.text
+      };
+      this.props.onMessageSubmit(message);
+      this.setState({ text: '' });
+  },
 
-	changeHandler: function changeHandler(e) {
-		this.setState({ text: e.target.value });
-	},
+  changeHandler: function changeHandler(e) {
+      this.setState({ text: e.target.value });
+  },
 
-	render: function render() {
-		return React.createElement(
-			'div',
-			{ className: 'message_form' },
-			React.createElement(
-				'form',
-				{ onSubmit: this.handleSubmit },
-				React.createElement('input', {
-					placeholder: '메시지 입력',
-					className: 'textinput',
-					onChange: this.changeHandler,
-					value: this.state.text
-				}),
-				React.createElement('h3', null)
-			)
-		);
-	}
+  render: function render() {
+      return React.createElement(
+          'div',
+          { className: 'message_form' },
+          React.createElement(
+              'form',
+              { onSubmit: this.handleSubmit },
+              React.createElement('input', {
+                  placeholder: '메시지 입력',
+                  className: 'textinput',
+                  onChange: this.changeHandler,
+                  value: this.state.text
+              }),
+              React.createElement('h3', null)
+          )
+      );
+  }
 });
 
 var ChangeNameForm = React.createClass({
-	displayName: 'ChangeNameForm',
+  displayName: 'ChangeNameForm',
 
-	getInitialState: function getInitialState() {
-		return { newName: '' };
-	},
+  getInitialState: function getInitialState() {
+      return { newName: '' };
+  },
 
-	onKey: function onKey(e) {
-		this.setState({ newName: e.target.value });
-	},
+  onKey: function onKey(e) {
+      this.setState({ newName: e.target.value });
+  },
 
-	handleSubmit: function handleSubmit(e) {
-		e.preventDefault();
-		var newName = this.state.newName;
-		this.props.onChangeName(newName);
-		this.setState({ newName: '' });
-	},
+  handleSubmit: function handleSubmit(e) {
+      e.preventDefault();
+      var newName = this.state.newName;
+      this.props.onChangeName(newName);
+      this.setState({ newName: '' });
+  },
 
-	render: function render() {
-		return React.createElement(
-			'div',
-			{ className: 'change_name_form' },
-			React.createElement(
-				'h3',
-				null,
-				' 아이디 변경 '
-			),
-			React.createElement(
-				'form',
-				{ onSubmit: this.handleSubmit },
-				React.createElement('input', {
-					placeholder: '변경할 아이디 입력',
-					onChange: this.onKey,
-					value: this.state.newName
-				})
-			)
-		);
-	}
+  render: function render() {
+      return React.createElement(
+          'div',
+          { className: 'change_name_form' },
+          React.createElement(
+              'h3',
+              null,
+              ' 아이디 변경 '
+          ),
+          React.createElement(
+              'form',
+              { onSubmit: this.handleSubmit },
+              React.createElement('input', {
+                  placeholder: '변경할 아이디 입력',
+                  onChange: this.onKey,
+                  value: this.state.newName
+              })
+          )
+      );
+  }
+});
+
+var LoginForm = React.createClass({
+  displayName: 'LoginForm',
+
+  getInitialState: function() {
+      return { username: '', password: '', error: '' };
+  },
+
+  handleSubmit: function(e) {
+      e.preventDefault();
+      var self = this;
+      axios.post('/login', {
+          username: this.state.username,
+          password: this.state.password
+      })
+      .then(function(response) {
+          self.props.onLogin(response.data.user);
+      })
+      .catch(function(error) {
+          self.setState({ error: error.response.data.message });
+      });
+  },
+
+  handleUsernameChange: function(e) {
+      this.setState({ username: e.target.value });
+  },
+
+  handlePasswordChange: function(e) {
+      this.setState({ password: e.target.value });
+  },
+
+  render: function() {
+      return React.createElement(
+          'div',
+          null,
+          React.createElement(
+              'h2',
+              null,
+              '로그인'
+          ),
+          React.createElement(
+              'form',
+              { onSubmit: this.handleSubmit },
+              React.createElement('input', {
+                  type: 'text',
+                  placeholder: '아이디',
+                  value: this.state.username,
+                  onChange: this.handleUsernameChange
+              }),
+              React.createElement('input', {
+                  type: 'password',
+                  placeholder: '비밀번호',
+                  value: this.state.password,
+                  onChange: this.handlePasswordChange
+              }),
+              React.createElement(
+                  'button',
+                  { type: 'submit' },
+                  '로그인'
+              ),
+              this.state.error && React.createElement(
+                  'p',
+                  null,
+                  this.state.error
+              )
+          )
+      );
+  }
+});
+
+var RegisterForm = React.createClass({
+  displayName: 'RegisterForm',
+
+  getInitialState: function() {
+      return { username: '', password: '', error: '' };
+  },
+
+  handleSubmit: function(e) {
+      e.preventDefault();
+      var self = this;
+      axios.post('/register', {
+          username: this.state.username,
+          password: this.state.password
+      })
+      .then(function(response) {
+          self.props.onRegister(self.state.username);
+      })
+      .catch(function(error) {
+          self.setState({ error: error.response.data.message });
+      });
+  },
+
+  handleUsernameChange: function(e) {
+      this.setState({ username: e.target.value });
+  },
+
+  handlePasswordChange: function(e) {
+      this.setState({ password: e.target.value });
+  },
+
+  render: function() {
+      return React.createElement(
+          'div',
+          null,
+          React.createElement(
+              'h2',
+              null,
+              '회원가입'
+          ),
+          React.createElement(
+              'form',
+              { onSubmit: this.handleSubmit },
+              React.createElement('input', {
+                  type: 'text',
+                  placeholder: '아이디',
+                  value: this.state.username,
+                  onChange: this.handleUsernameChange
+              }),
+              React.createElement('input', {
+                  type: 'password',
+                  placeholder: '비밀번호',
+                  value: this.state.password,
+                  onChange: this.handlePasswordChange
+              }),
+              React.createElement(
+                  'button',
+                  { type: 'submit' },
+                  '회원가입'
+              ),
+              this.state.error && React.createElement(
+                  'p',
+                  null,
+                  this.state.error
+              )
+          )
+      );
+  }
 });
 
 var ChatApp = React.createClass({
-	displayName: 'ChatApp',
+  displayName: 'ChatApp',
 
-	getInitialState: function getInitialState() {
-		return { users: [], messages: [], text: '' };
-	},
+  getInitialState: function() {
+      return {
+          users: [],
+          messages: [],
+          user: '',
+          isLoggedIn: false,
+          isRegistering: false
+      };
+  },
 
-	componentDidMount: function componentDidMount() {
-		socket.on('init', this._initialize);
-		socket.on('send:message', this._messageRecieve);
-		socket.on('user:join', this._userJoined);
-		socket.on('user:left', this._userLeft);
-		socket.on('change:name', this._userChangedName);
-	},
+  componentDidMount: function() {
+      socket.on('init', this.initialize);
+      socket.on('send:message', this.messageReceive);
+      socket.on('user:join', this.userJoined);
+      socket.on('user:left', this.userLeft);
+      socket.on('change:name', this.userChangedName);
+  },
 
-	_initialize: function _initialize(data) {
-		var users = data.users;
-		var name = data.name;
+  initialize: function(data) {
+      this.setState({ users: data.users, user: data.name });
+  },
 
-		this.setState({ users: users, user: name });
-	},
+  messageReceive: function(message) {
+      this.setState({
+          messages: this.state.messages.concat(message)
+      });
+  },
 
-	_messageRecieve: function _messageRecieve(message) {
-		var messages = this.state.messages;
+  handleMessageSubmit: function(message) {
+      var messages = this.state.messages;
+      messages.push(message);
+      this.setState({ messages: messages });
+      socket.emit('send:message', message);
+  },
 
-		messages.push(message);
-		this.setState({ messages: messages });
-	},
+  handleChangeName: function(newName) {
+      var oldName = this.state.user;
+      var users = this.state.users;
+      socket.emit('change:name', { name: newName }, function(result) {
+          if (!result) {
+              return alert('There was an error changing your name');
+          }
+          var index = users.indexOf(oldName);
+          users.splice(index, 1, newName);
+          this.setState({ users: users, user: newName });
+      }.bind(this));
+  },
 
-	handleMessageSubmit: function handleMessageSubmit(message) {
-		var messages = this.state.messages;
+  userJoined: function(data) {
+      var users = this.state.users;
+      users.push(data.name);
+      this.setState({ users: users });
+  },
 
-		messages.push(message);
-		this.setState({ messages: messages });
-		socket.emit('send:message', message);
-	},
+  userLeft: function(data) {
+      var users = this.state.users;
+      var index = users.indexOf(data.name);
+      users.splice(index, 1);
+      this.setState({ users: users });
+  },
 
-	handleChangeName: function handleChangeName(newName) {
-		var _this = this;
+  userChangedName: function(data) {
+      var users = this.state.users;
+      var index = users.indexOf(data.oldName);
+      users.splice(index, 1, data.newName);
+      this.setState({ users: users });
+  },
 
-		var oldName = this.state.user;
-		socket.emit('change:name', { name: newName }, function (result) {
-			if (!result) {
-				return alert('There was an error changing your name');
-			}
-			var users = _this.state.users;
+  handleLogin: function(user) {
+      this.setState({ user: user.username, isLoggedIn: true });
+      socket.emit('user:join', { name: user.username });
+  },
 
-			var index = users.indexOf(oldName);
-			users.splice(index, 1, newName);
-			_this.setState({ users: users, user: newName });
-		});
-	},
+  handleRegister: function(username) {
+      this.setState({ user: username, isLoggedIn: true });
+      socket.emit('user:join', { name: username });
+  },
 
-	render: function render() {
-		return React.createElement(
-			'div',
-			null,
-			React.createElement(
-				'div',
-				{ className: 'center' },
-				React.createElement(UsersList, {
-					users: this.state.users
-				}),
-				React.createElement(ChangeNameForm, {
-					onChangeName: this.handleChangeName
-				}),
-				React.createElement(MessageList, {
-					messages: this.state.messages
-				}),
-				React.createElement(MessageForm, {
-					onMessageSubmit: this.handleMessageSubmit,
-					user: this.state.user
-				})
-			)
-		);
-	}
+  render: function() {
+      return React.createElement(
+          'div',
+          null,
+          !this.state.isLoggedIn ? React.createElement(
+              'div',
+              null,
+              this.state.isRegistering ? React.createElement(RegisterForm, { onRegister: this.handleRegister }) : React.createElement(LoginForm, { onLogin: this.handleLogin }),
+              React.createElement(
+                  'button',
+                  { onClick: function() {
+                          this.setState({ isRegistering: !this.state.isRegistering });
+                      }.bind(this) },
+                  this.state.isRegistering ? '로그인 화면으로' : '회원가입 화면으로'
+              )
+          ) : React.createElement(
+              'div',
+              { className: 'center' },
+              React.createElement(UsersList, { users: this.state.users }),
+              React.createElement(ChangeNameForm, { onChangeName: this.handleChangeName }),
+              React.createElement(MessageList, { messages: this.state.messages }),
+              React.createElement(MessageForm, { onMessageSubmit: this.handleMessageSubmit, user: this.state.user })
+          )
+      );
+  }
 });
 
-React.render(React.createElement(ChatApp, null), document.getElementById('app'));
-/* <div> */ /* </div> */
+React.render(React.createElement(ChatApp, null), document.getElementById('root'));
+
+
+
+// /* <div> */ /* </div> */
+
+
 
 },{"react":157}],2:[function(require,module,exports){
 // shim for using process in browser
